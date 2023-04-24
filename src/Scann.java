@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 
 public class Scann
@@ -15,61 +17,110 @@ public class Scann
     private long _finScann;
     private long _debutWrite;
     private long _finWrite;
-    private int cpt = 50;
 
     private String _name;
     private String _address;
 
+    /**
+     * Constructor need path in String and name file .txt
+     * to write this scann
+     * @param address
+     * @param name
+     */
     public Scann(String address, String name)
     {
         this._address = address;
         this._name = name;
     }
 
+    /**
+     * This methode launch Scann
+     */
     public void runScann()
     {
+        _debutScann = System.currentTimeMillis();                   // time to start scann
         String address = _address;
         createFile(address);
         
         
-        
-        if(_listFile.size() < cpt);
-        { 
-            //checkList();    
-        }
+        checkList();
+        _finScann = System.currentTimeMillis();                     // time to end scann
+
+        _debutWrite = System.currentTimeMillis();                   // time to start write
 
         choiceCallWritter(_listFile);
 
-        
+        _finWrite = System.currentTimeMillis();                     // time to end write
+
+        displayTime();
     }
 
+    /**
+     * this methode calculate the elapsed time 
+     */
+    private void displayTime()
+    {
+        long st = (_finScann - _debutScann)/1000;
+        long wt = (_finWrite - _debutWrite)/1000;
+
+        System.out.println("Temps du scann en secondes : "+st);
+        System.out.println("Temps d'ecriture en secondes : "+wt);
+
+    }
+
+    /**
+     * this method sort File file at directory first and file last
+     * @param file
+     */
     private void sortTab(File[] file)
     {
-        _listFile.sort(file, new Comparator<>() {
-
+        
+        Arrays.sort(file, new Comparator<File>()
+        {
             @Override
-            public int compare(T o1, T o2)
+            public int compare(File file1, File file2)
             {
-
+                if(file1.isDirectory() && file2.isDirectory())
+                    return 0;
+                if(file1.isDirectory() && file2.isFile())
+                    return -1;
+                if(file1.isFile() && file2.isDirectory())
+                    return 1;
+                if(file1.isFile() && file2.isFile())
+                    return 0;
+                
+                return 0;
+               
+                
             }
             
         });
     }
 
+    /**
+     * This methode create File file, need String path
+     * Check several options
+     * Call another methode createTab()
+     * @param address
+     */
     private void createFile(String address)
     {
         File file = new File(address);
-        System.out.println("creation du file");
-        if(file.exists())
+        
+        if(file.exists() || file.canRead() || !file.isHidden())
         {
-            System.out.println("appel ajout au tab");
             createTab(file);           
         }
     }
 
+    /**
+     * This method check this Array is null or 0 in size
+     * @param tab
+     * @return
+     */
     private boolean checkFile(File[] tab)
     {
-        if(tab == null || tab.length < 0)
+        if(tab == null || tab.length == 0)
         {
             return false;
         }
@@ -77,45 +128,59 @@ public class Scann
         return true;
     }
 
+    /**
+     * This method create Array of type File
+     * Check this Array
+     * Call method sortTab() and addTabToList()
+     * @param file
+     */
     private void createTab(File file)
     {
         File[] tabFile = file.listFiles();
         
         if(!checkFile(tabFile))
         {
-            System.out.println("tab vide");
             return;
         }
         else
         {
-            System.out.println("ajout au tab");
+            sortTab(tabFile);
             addTabToList(tabFile);
         }
     }
 
+    /**
+     * This method add Array type File 
+     * And increment an int by 1
+     * @param tab
+     */
     private void addTabToList(File[] tab)
     {
-        System.out.println("ajout a la liste");
         _listFile.add(tab);
         _compteur++;
     }
 
+    /**
+     * This method browse Array type File in ArrayList<File[]>
+     * And call createFile() with name of file
+     */
     private void checkList()
     {
-        System.out.println("checklist");
-        for(File [] file : _listFile)
+        for(int j = 0; j < _listFile.size(); j++)
         {
-            for(int i = 0; i < file.length; i++)
+            for(int i = 0; i < _listFile.get(j).length; i++)
             {
-                createFile(file[i].getName());
+                createFile(_listFile.get(j)[i].getPath());
             }
         }
     }
 
+    /**
+     * This method write in file.txt this scann
+     * @param list
+     */
     private void choiceCallWritter(ArrayList<File[]> list)
-    {
-        System.out.println("debut du write");
-        
+    {        
         for(File[] tab : list)
         {
             String text = "----------------------------"+tab[0].getParent()+"------------------------------------------";
@@ -135,6 +200,13 @@ public class Scann
         }
     }
 
+    /**
+     * This method writes in file.txt the contents of the array
+     * @param nameFile
+     * @param size
+     * @param name
+     * @param text
+     */
     private void writterFile(String nameFile, long size, String name, String text)
     {
         File file = new File(_name);
