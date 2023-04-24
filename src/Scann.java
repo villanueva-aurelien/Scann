@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Scann
 {
@@ -14,6 +15,7 @@ public class Scann
     private long _finScann;
     private long _debutWrite;
     private long _finWrite;
+    private int cpt = 50;
 
     private String _name;
     private String _address;
@@ -26,28 +28,43 @@ public class Scann
 
     public void runScann()
     {
-        createFile();
-        do
-        {
-            createFile();
+        String address = _address;
+        createFile(address);
+        
+        
+        
+        if(_listFile.size() < cpt);
+        { 
+            //checkList();    
         }
-        while(_listFile.size() < _compteur);
-        {
-            checkList();
-            choiceCallWritter(_listFile);
-        }
+
+        choiceCallWritter(_listFile);
+
+        
     }
 
-    private void createFile()
+    private void sortTab(File[] file)
     {
-        String address = _address;
+        _listFile.sort(file, new Comparator<>() {
 
+            @Override
+            public int compare(T o1, T o2)
+            {
+
+            }
+            
+        });
+    }
+
+    private void createFile(String address)
+    {
         File file = new File(address);
-
+        System.out.println("creation du file");
         if(file.exists())
-            createTab(file);
-
-                
+        {
+            System.out.println("appel ajout au tab");
+            createTab(file);           
+        }
     }
 
     private boolean checkFile(File[] tab)
@@ -65,27 +82,43 @@ public class Scann
         File[] tabFile = file.listFiles();
         
         if(!checkFile(tabFile))
+        {
+            System.out.println("tab vide");
             return;
+        }
         else
+        {
+            System.out.println("ajout au tab");
             addTabToList(tabFile);
+        }
     }
 
     private void addTabToList(File[] tab)
     {
+        System.out.println("ajout a la liste");
         _listFile.add(tab);
         _compteur++;
     }
 
     private void checkList()
     {
-        choiceCallWritter(_listFile);
+        System.out.println("checklist");
+        for(File [] file : _listFile)
+        {
+            for(int i = 0; i < file.length; i++)
+            {
+                createFile(file[i].getName());
+            }
+        }
     }
 
     private void choiceCallWritter(ArrayList<File[]> list)
     {
-        String text = "----------------------------file[0].getParent()------------------------------------------";
+        System.out.println("debut du write");
+        
         for(File[] tab : list)
         {
+            String text = "----------------------------"+tab[0].getParent()+"------------------------------------------";
             writterFile(_address, text);
 
             for(int i = 0; i < tab.length; i++)
@@ -113,24 +146,24 @@ public class Scann
             if (!file.exists()) 
                 file.createNewFile();
 
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
             BufferedWriter bw = new BufferedWriter(fw);
-            PrintWriter pr = new PrintWriter(bw, true);
+            
             if(size == -1 && text == null)
             {
-                pr.write(nameFile);
-                pr.close();
+                bw.write(name+"\n");
+                bw.close();
             }
             if(text != null)
             {
-                pr.write(text);
-                pr.close();
+                bw.write(text+"\n");
+                bw.close();
             }
             if(size != -1)
             {
-                nameFile = "-- "+ nameFile + "->" + size + " octet";
-                pr.write(nameFile);
-                pr.close();
+                name = "-- "+ name + "->" + size + " octet" +"\n";
+                bw.write(name);
+                bw.close();
             }
         }
         catch (IOException e)

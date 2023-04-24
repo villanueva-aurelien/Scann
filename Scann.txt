@@ -1,0 +1,38 @@
+----------------------------C:\------------------------------------------
+$Recycle.Bin
+$Windows.~WS
+$WinREAgent
+-- $WINRE_BACKUP_PARTITION.MARKER->0 octet
+-- .GamingRoot->28 octet
+AMD
+Battlestate Games
+Boot
+-- bootmgr->416024 octet
+-- BOOTNXT->1 octet
+-- BOOTSECT.BAK->8192 octet
+Config.Msi
+-- csb.log->10 octet
+Documents and Settings
+-- DumpStack.log->8192 octet
+-- DumpStack.log.tmp->8192 octet
+-- end->0 octet
+ESD
+-- hiberfil.sys->13722132480 octet
+-- Install.log->189 octet
+Logiciel code
+OneDriveTemp
+-- pagefile.sys->5100273664 octet
+PerfLogs
+Program Files
+Program Files (x86)
+ProgramData
+Recovery
+Riot Games
+-- swapfile.sys->16777216 octet
+System Volume Information
+temp
+Users
+var
+VFUN
+Windows
+XboxGames
